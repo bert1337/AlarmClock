@@ -23,7 +23,7 @@
     <RelativeLayout
 
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="428dp"
         android:layout_weight="3">
 
         <LinearLayout
@@ -36,7 +36,7 @@
                 android:id="@+id/alarm_alert_label"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="0px"
+                android:layout_height="8dp"
                 android:layout_weight="1"
                 android:clickable="false"
                 android:gravity="center|center_horizontal"
@@ -48,7 +48,7 @@
             <com.better.alarm.view.DigitalClock
                 android:id="@+id/alert_digital_clock"
                 android:layout_width="match_parent"
-                android:layout_height="0px"
+                android:layout_height="3dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal">
 
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-thin"
-                    android:textSize="100sp"
+                    android:textSize="50sp"
                     android:textStyle="normal" />
 
                 <TextView
@@ -65,30 +65,36 @@
                     android:layout_width="40dip"
                     android:layout_height="wrap_content"
                     android:gravity="bottom|center_horizontal"
-                    android:textSize="20sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
             </com.better.alarm.view.DigitalClock>
 
-            <TextView
-                android:id="@+id/alert_text_snooze"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="232dp"
+                android:layout_weight="1">
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Questo sarà un todo" />
+            </ScrollView>
+
+            <Button
+                android:id="@+id/alert_button_snooze"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="1"
-                android:clickable="false"
+                android:layout_height="71dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/alarm_alert_snooze_text"
                 android:textSize="24sp" />
+
         </LinearLayout>
 
-        <Button
-            android:id="@+id/alert_button_snooze"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="10dp" />
     </RelativeLayout>
 
     <View

@@ -100,9 +100,7 @@ public class AlarmAlertFullScreen extends FragmentActivity {
             // AlarmAlert
             // subclass as a result of the screen turning off.
             if (!getIntent().getBooleanExtra(SCREEN_OFF, false)) {
-                win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                        | WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
+                win.addFlags(WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
             }
 
             updateLayout();
@@ -255,7 +253,7 @@ public class AlarmAlertFullScreen extends FragmentActivity {
                 LONGCLICK_DISMISS_DEFAULT);
 
         Button snooze = findViewById(R.id.alert_button_snooze);
-        View snoozeText = findViewById(R.id.alert_text_snooze);
+        View snoozeText = findViewById(R.id.alert_button_snooze);
         if (snooze != null) snooze.setEnabled(isSnoozeEnabled());
         if (snoozeText != null) snoozeText.setEnabled(isSnoozeEnabled());
     }

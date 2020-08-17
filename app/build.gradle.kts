@@ -129,6 +129,7 @@ dependencies {
 
     implementation("org.koin:koin-core:2.0.1")
     implementation("org.koin:koin-core-ext:2.0.1")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     testImplementation("org.koin:koin-test:2.0.1")
 
     val fragment_version = "1.2.2"
