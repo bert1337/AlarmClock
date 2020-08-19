@@ -21,13 +21,19 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -44,6 +50,15 @@ import com.better.alarm.presenter.DynamicThemeHandler;
 import com.better.alarm.presenter.PickedTime;
 import com.better.alarm.presenter.TimePickerDialogFragment;
 import com.better.alarm.util.Optional;
+
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
@@ -74,11 +89,76 @@ public class AlarmAlertFullScreen extends FragmentActivity {
     private Disposable disposableDialog = Disposables.disposed();
     private Disposable subscription;
 
+    public class Todo {
+        boolean completed;
+        Date completedOn;
+        Date createdOn;
+        String todo;
+        String priority;
+        Date dueDate;
+
+        Todo(String text){
+            completed = text.charAt(0) == 'x';
+            if(completed){
+                completedOn = new Date(text.substring(2,13));
+                createdOn = new Date(text.substring(13,24));
+                String temp = text.substring(24);
+                this.setOther(temp);
+            }else{
+                createdOn = new Date(text.substring(0,11));
+                String temp = text.substring(11);
+                this.setOther(temp);
+            }
+        }
+
+        private void setOther(String temp){
+            String[] tempArr = temp.split("(?=due:|pri:)");
+            todo = tempArr[0];
+            for(int i = 1; i < tempArr.length; i++){
+                if(tempArr[i].contains("pri:")){
+                    priority = tempArr[i];
+                }
+                if(tempArr[i].contains("due:")){
+                    dueDate = new Date(tempArr[i]);
+                }
+            }
+        }
+    }
+
+    public ArrayList<Todo> readTodo(){
+
+        File sdcard = Environment.getExternalStorageDirectory();
+//Get the text file
+        File file = new File(sdcard,"todo.txt");
+
+//Read text from file
+//        StringBuilder text = new StringBuilder();
+        ArrayList<Todo> res = new ArrayList<>();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                Log.d("TESTNIGGER", line);
+                res.add(new Todo(line));
+//                text.append(line);
+//                text.append('\n');
+
+            }
+            br.close();
+            return res;
+        }
+        catch (IOException e) {
+            //You'll need to add proper error handling here
+            Log.d("TESTNIGGER", e.toString());
+            return new ArrayList<>();
+        }
+    };
     @Override
     protected void onCreate(Bundle icicle) {
         setTheme(dynamicThemeHandler.getIdForName(getClassName()));
-        super.onCreate(icicle);
 
+        super.onCreate(icicle);
         if (getResources().getBoolean(R.bool.isTablet)) {
             // preserve initial rotation and disable rotation change
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -102,7 +182,6 @@ public class AlarmAlertFullScreen extends FragmentActivity {
             if (!getIntent().getBooleanExtra(SCREEN_OFF, false)) {
                 win.addFlags(WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
             }
-
             updateLayout();
 
             // Register to get the alarm killed/snooze/dismiss intent.
@@ -142,8 +221,17 @@ public class AlarmAlertFullScreen extends FragmentActivity {
 
     private void updateLayout() {
         LayoutInflater inflater = LayoutInflater.from(this);
-
         setContentView(inflater.inflate(getLayoutResId(), null));
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.container);
+        ArrayList<Todo> todos = readTodo();
+        for(Todo todo : todos){
+            CheckBox child = new CheckBox(this);
+            child.setChecked(todo.completed);
+            child.setText(todo.todo);
+            layout.addView(child);
+        }
+
 
         /*
          * snooze behavior: pop a snooze confirmation view, kick alarm manager.
@@ -235,6 +323,7 @@ public class AlarmAlertFullScreen extends FragmentActivity {
         super.onNewIntent(intent);
 
         logger.d("AlarmAlert.OnNewIntent()");
+        readTodo();
 
         int id = intent.getIntExtra(Intents.EXTRA_ID, -1);
         try {

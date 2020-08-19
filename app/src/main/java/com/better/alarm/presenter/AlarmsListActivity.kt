@@ -23,27 +23,18 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.ChangeTransform
-import android.transition.Fade
-import android.transition.Slide
-import android.transition.TransitionSet
+import android.os.Environment
+import android.transition.*
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.better.alarm.BuildConfig
-import com.better.alarm.NotificationSettings
-import com.better.alarm.R
-import com.better.alarm.checkPermissions
-import com.better.alarm.configuration.EditedAlarm
-import com.better.alarm.configuration.Store
-import com.better.alarm.configuration.globalGet
-import com.better.alarm.configuration.globalInject
-import com.better.alarm.configuration.globalLogger
+import com.better.alarm.*
+import com.better.alarm.configuration.*
 import com.better.alarm.interfaces.IAlarmsManager
 import com.better.alarm.logger.Logger
-import com.better.alarm.lollipop
 import com.better.alarm.model.AlarmValue
 import com.better.alarm.model.Alarmtone
 import com.better.alarm.model.DaysOfWeek
@@ -56,7 +47,11 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import java.util.Calendar
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileReader
+import java.io.IOException
+import java.util.*
 
 /**
  * This activity displays a list of alarms and optionally a details fragment.
@@ -160,6 +155,9 @@ class AlarmsListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(dynamicThemeHandler.getIdForName(AlarmsListActivity::class.java.name))
         super.onCreate(savedInstanceState)
+        Log.d("SGAMATO", "SGAMATO");
+
+
 
         when {
             savedInstanceState != null && savedInstanceState.getInt("version", BuildConfig.VERSION_CODE) == BuildConfig.VERSION_CODE -> {

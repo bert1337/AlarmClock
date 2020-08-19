@@ -70,15 +70,16 @@
             </com.better.alarm.view.DigitalClock>
 
             <ScrollView
+                android:id="@+id/todo_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="232dp"
                 android:layout_weight="1">
 
-                <CheckBox
-                    android:id="@+id/checkBox"
+                <LinearLayout
+                    android:id="@+id/container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Questo sarà un todo" />
+                    android:orientation="vertical"></LinearLayout>
             </ScrollView>
 
             <Button
